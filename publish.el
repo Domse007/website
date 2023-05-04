@@ -20,7 +20,7 @@
 
 (package-initialize)
 
-;; (package-refresh-contents)
+(package-refresh-contents)
 
 (defmacro check-package (package)
   `(progn (unless (package-installed-p ',package)

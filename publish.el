@@ -22,13 +22,12 @@
 
 (package-refresh-contents)
 
+(async-bytecomp-package-mode nil)
+
 (defmacro check-package (package)
   `(progn (unless (package-installed-p ',package)
 	    (message "Installing %s" (symbol-name ',package))
 	    (package-install ',package))
-	  (while (not (package-installed-p 'use-package))
-	    (message "Waiting for %s" (symbol-name ',package))
-	    (sleep-for 1))
 	  (require ',package)))
 
 (require 'ox-publish)

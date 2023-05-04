@@ -22,8 +22,6 @@
 
 (package-refresh-contents)
 
-(async-bytecomp-package-mode nil)
-
 (defmacro check-package (package)
   `(progn (unless (package-installed-p ',package)
 	    (message "Installing %s" (symbol-name ',package))

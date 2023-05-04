@@ -1,0 +1,52 @@
+#+title: OOP where no OOP should be
+#+author: Dominik Keller
+
+Emacs lisp is a beast of a language. It evolved over the years and
+features were added left and right. And after fourty years of
+development emacs ships now with two different types of structs:
+=cl-defstuct= and =defclass=.
+
+Internally they share the same core: vectors. The fields of the
+structs are stored in specific slots of the vector. Both are also just
+macros and therefore can define custom constructors and checkers for
+every struct.
+
+* =cl-defstruct=
+Let's start with the most basic example:
+
+#+begin_src emacs-lisp :exports both
+(require 'cl-macs)
+
+(cl-defstruct cl-person
+  name last-name age)
+
+(let ((john (make-cl-person :name "John" :last-name "Smith" :age 32)))
+  (cl-assert (cl-person-p john))
+  (message "%s %s is %i years old." (cl-person-name john)
+           (cl-person-last-name john) (cl-person-age john)))
+#+end_src
+
+#+RESULTS:
+: John Smith is 32 years old.
+
+* =defclass=
+A basic example in the non common lisp implementation is pretty
+similar to the =defclass= implementation:
+
+#+begin_src emacs-lisp :exports both
+(defclass person nil
+  ((name :initarg :name :reader person-name)
+   (last-name :initarg :last-name :reader person-last-name)
+   (age :initarg :age :reader person-age)))
+
+(let ((john (person :name "John" :last-name "Smith" :age 32)))
+  (cl-assert (person-p john))
+  (message "%s %s is %i years old." (person-name john)
+           (person-last-name john) (person-age john)))
+#+end_src
+
+#+RESULTS:
+: John Smith is 32 years old.
+
+* Conclusions
+

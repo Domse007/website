@@ -1,0 +1,14 @@
+#+title: Welcome!
+#+author: Dominik Keller
+
+This site contains thoughts and notes mostly about Emacs, Rust and GNU/Linux.
+
+* Emacs
+There is the joke that linux users spend too much time working on
+their dotfiles. This applies to me as well. I spend hundreds of hours
+into my emacs [[https://www.github.com/domse007/.emacs.d][config]]. The result is a pretty fast, host and platform
+independant config.
+
+While tinkering with the config or writing small packages, I find a
+lot of amusing things:
+- [[file:elisp-classes.org][Emacs lisp is OOP]]

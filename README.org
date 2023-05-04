@@ -1,0 +1,16 @@
+#+title: Personal website.
+
+* Building
+
+#+begin_src sh
+make
+#+end_src
+
+or
+
+#+begin_src sh
+emacs -q --script publish.el
+#+end_src
+
+* Serving
+=M-x httpd-serve-directory RET public RET=

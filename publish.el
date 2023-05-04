@@ -35,7 +35,7 @@
 (check-package htmlize)
 
 (defconst site-source-directory (expand-file-name "source/" default-directory))
-(defconst site-export-directory (expand-file-name "public/" default-directory))
+(defconst site-export-directory (expand-file-name "_site/" default-directory))
 
 (defun build-entry (a b c)
   "Defines format of sitemap entries."

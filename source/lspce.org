@@ -1,4 +1,5 @@
 #+title: LSPCE - a native LSP client
+#+author: Dominik Keller
 
 [[https://github.com/zbelial/lspce][LSPCE]] is a great project that implements a basic =lsp= client that uses
 a native rust backend to communicate with the language server. This

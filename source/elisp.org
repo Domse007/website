@@ -1,0 +1,54 @@
+#+title: My grieveances with elisp
+#+author: Dominik Keller
+
+Emacs and it's specialized lisp are great. The deep integration of
+elisp into the emacs runtime allow an infinite amount of
+customizeablitiy and result in a more or less perfect editing
+environment.
+
+But there are a few problems that I would like to list in this
+article. That means that this article is always a work in progress.
+
+* Non-traceable globals
+Elisp mostly uses functions that only compute on their arguments. But,
+there are some functions that use globals that are not visible and
+sometimes cause a lot of trouble and nesting. One example is
+=copy-file=. The required arguments are great, but what is the base
+directory for the required arguments? That is depending by the
+=default-directory= variable. The =default-directory= is especially bad,
+because it changes on the current context. If the executing lisp code
+is associated to a buffer, =default-directory= is set to the path of the
+file wich is shown in the buffer. To not break subsequent code, you
+can't simply =setq= =default-directory=, but you can shadow the variable:
+
+#+begin_src emacs-lisp
+(let ((default-directory (expand-file-name "~")))
+  (copy-file ".emacs" ".emacs-backup" t))
+#+end_src
+
+In this example =default-directory= is set to HOME but only for the
+scope of the =let= special form.
+
+I can understand that it may be convenient to use this "global"
+variable, but I would like to add an optional argument:
+=path-or-default-directory=. When the argument is =nil= use
+=default-directory=, otherwise use path from =path-or-default-directory=.
+
+A wrapper function on the current implementation could look like this:
+
+#+begin_src emacs-lisp
+(defun xcopy-file (file newname &optional path-or-default-directory
+			ok-if-already-exists keep-time
+			preserve-uid-gid preserve-permissions)
+  (let ((default-directory (if path-or-default-directory
+			       path-or-default-directory
+			     default-directory)))
+    (copy-file file newname ok-if-already-exists keep-time preserve-uid-gid
+	       preserve-permissions)))
+#+end_src
+
+With that change the call from above could look lik this:
+
+#+begin_src emacs-lisp
+(xcopy-file ".emacs" ".emacs-backup" "~")
+#+end_src

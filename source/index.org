@@ -12,4 +12,5 @@ independant config.
 While tinkering with the config or writing small packages, I find a
 lot of amusing things:
 - [[file:elisp-classes.org][Emacs lisp is OOP]]
-- [[file:lspce.org][A guide to install lspce]]  
+- [[file:lspce.org][A guide to install lspce]]
+- [[file:elisp.org][My grieveances with elisp]]

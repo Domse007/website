@@ -1,0 +1,80 @@
+#+title: LSPCE - a native LSP client
+
+[[https://github.com/zbelial/lspce][LSPCE]] is a great project that implements a basic =lsp= client that uses
+a native rust backend to communicate with the language server. This
+allows the client (emacs) to asynchronously communicate with the
+server and therefore improve the responsiveness of the editor.
+
+Because the backend is written in rust and rust uses a pretty
+universal =std=-lib and dependencies are normally cross platform, the
+package is usable under linux and windows. I personally use it under
+windows.
+
+One problem that might arise is that emacs must be compiled with
+modules support. This flag (=--with-modules=)must be set at compile time. 
+
+* Installation
+Unfortunately =LSPCE= is not on any package archive, it is not as easy
+to automatically clone the package with the help of [[https://github.com/quelpa/quelpa][quelpa]]. We still
+can use quelpa but we also have to add some initialization magic to
+ensure we have the compiled module. =use-package= supports the =:init=
+property, which is only called when the package is loaded. With the
+right code we can ensure that the native modules are available when
+emacs wants to load them. A very basic implementation can be found in
+my [[https://www.github.com/domse007/.emacs.d][config]]:
+
+#+begin_src emacs-lisp
+(use-package lspce
+  :quelpa (lspce :fetcher github :repo "zbelial/lspce" :files ("*"))
+  :init
+  (let ((default-directory (file-name-directory (locate-library "lspce"))))
+    (message "Entering %s" (pwd))
+    (unless (or (file-exists-p "lspce-module.so")
+		(file-exists-p "lspce-module.d")
+                (file-exists-p "lspce-module.dll"))
+      (shell-command "cargo build --release")
+      (cond ((eq system-type 'gnu/linux)
+	     (progn (copy-file "target/release/liblspce_module.so"
+			       "lspce-module.so" t)
+		    (copy-file "target/release/liblspce_module.d"
+			       "lspce-module.d" t)))
+	    ((eq system-type 'windows-nt)
+	     (progn (copy-file "target/release/lspce_module.dll"
+			       "lspce-module.dll" t)
+		    (copy-file "target/release/lspce_module.d"
+			       "lspce-module.d" t))))
+      (message "Done.")))
+  (require 'lspce))
+#+end_src
+
+It is important to specify which files =quelpa= should "install" in the
+directory specified in =package-user-dir=, because normally =quelpa= only
+installs =*.el= files. In this example we specify every file in the
+project.
+
+In the =:init= section we first locate the directory where the package
+was installed. We shadow =default-directory= because other commands use
+the variable as it's base directory.
+
+Then we check if any of the following files exist: =lspce-module.so=,
+=lspce-module.d= or =lspce-module.dll=. By checking for =.dll= and =.so= we
+support windows and linux. If none of them exist we start compiling
+the native module.
+
+In the body we invoke =cargo= and build the module. After that a check
+is performed if =emacs= is running under =linux= or =windows=. Then the
+respective libraries are copied into the root directory of the package
+because emacs only looks for modules at the root of the package.
+
+* Conclusion
+First of all: the package is awesome. Realistically, I did not use
+most of the functionalitiy of =lsp-mode= and the speed improvement is
+immense. I can't thank [[https://github.com/zbelial][zbelial]] enough for this awesome package. I will
+continue to use it.
+
+My own code is good for installations, but there are certainly
+problems when updating the package. But I will currently not invest
+time to fix it, because on windows I have file permission problems. I
+will not further investigate them, because they only appear when
+deleting the package. I suspect windows won't let me delete the =dll=
+because emacs is using it.  

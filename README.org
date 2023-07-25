@@ -1,12 +1,23 @@
 #+title: Personal website.
 
+This repo contains the source files for my static website. It uses
+GitHub actions to automatically build and deploy it to [[https://domse007.github.io/website/][GitHub Pages]].
+
+The source files consist of org documents (located in =source/=), which
+are transpiled into html documents using the =org-export= backend.
+
 * Building
+The only requirement for building is emacs and an internet connection.
+The script will install all dependencies and generate the =public/=
+directory with all content.
+
+You can use the Makefile
 
 #+begin_src sh
 make
 #+end_src
 
-or
+or invoke emacs with the following command:
 
 #+begin_src sh
 emacs -q --script publish.el

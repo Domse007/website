@@ -6,6 +6,8 @@
   (setq package-check-signature nil))
 
 (message "%s" (emacs-version))
+(message "Emacs was compiled with: %s" system-configuration-options)
+(message "Emacs supports %s" system-configuration-features)
 
 (when (version< "28.0.50" emacs-version)
   (setq package-native-compile t

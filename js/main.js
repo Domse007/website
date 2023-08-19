@@ -37,7 +37,7 @@ searchInput.addEventListener("input", (e) => {
 
 searchInput.addEventListener("blur", (e) => {
     const input = e.target.value.trim().toLowerCase();
-    if (input.length() == 0) {
+    if (input.length == 0) {
         list.replaceChildren();
     }
 });

@@ -93,7 +93,8 @@ a {
 }
 
 #search-div {
-    display: block;
+    display: flex;
+    justify-content: center;
     flex-flow: row wrap;
     width: 350px;
 }

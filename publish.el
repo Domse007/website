@@ -84,15 +84,13 @@
 	      "<script type=\"module\" src=\"js/main.js\"></script>"
 	      "<link href=\"https://fonts.googleapis.com/css?family=Source Code Pro\" rel=\"stylesheet\">"
 	      "<div class=\"hdr\">"
-	      "  <h1 id=\"name\"><a id=\"header-title\" href=\"/\">Dominik Keller</a></h1>"
-
+	      "  <h1 id=\"name\"><a id=\"header-title\" href=\"./\">Dominik Keller</a></h1>"
 	      "  <div id=\"search-div-wrapper\">"
 	      "    <div id=\"search-div\">"
 	      "      <input id=\"search\" type=\"text\" placeholder=\"search...\"/>"
 	      "      <div id=\"list\"> </div>"
 	      "    </div>"
 	      "  </div>"
-	      
 	      "  <div id=\"header-selector\">"
 	      "    <a class=\"main-selector\" href=\"/posts/overview.html\">Overview</a>"
 	      "    <a class=\"main-selector\" href=\"/about.html\">About</a>"

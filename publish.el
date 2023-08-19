@@ -34,6 +34,23 @@
 (defconst site-source-directory (expand-file-name "source/" default-directory))
 (defconst site-export-directory (expand-file-name "public/" default-directory))
 
+(defvar website-posts nil
+  "All titles of the posts.")
+
+(advice-add #'org-html-publish-to-html
+	    :around
+	    (lambda (orig-fun &rest args)
+	      (let* ((plist (nth 0 args))
+		     (filename (nth 1 args))
+		     (title (org-publish-find-title filename plist))
+		     (export-filename
+		      (concat (file-name-sans-extension
+			       (file-name-nondirectory filename))
+			      ".html")))
+		(message "Adding %s from %s to posts." title filename)
+		(push (cons title export-filename) website-posts))
+	      (apply orig-fun args)))
+
 (defun build-entry (a b c)
   "Defines format of sitemap entries."
   (let ((time (format-time-string "%d.%m.%Y" (org-publish-find-date a c)))
@@ -64,14 +81,23 @@
       org-src-tab-acts-natively t
       org-html-head
       (concat "<link rel=\"stylesheet\" href=\"style/style.css\" />"
+	      "<script type=\"module\" src=\"js/main.js\"></script>"
 	      "<link href=\"https://fonts.googleapis.com/css?family=Source Code Pro\" rel=\"stylesheet\">"
 	      "<div class=\"hdr\">"
-	      "    <h1 id=\"name\"><a id=\"header-title\" href=\"/\">Dominik Keller</a></h1>"
-	      "    <div id=\"header-selector\">"
-	      "        <a class=\"main-selector\" href=\"/posts/overview.html\">Overview</a>"
-	      "        <a class=\"main-selector\" href=\"/about.html\">About</a>"
-	      "        <a class=\"main-selector\" href=\"https://www.github.com/domse007/\">Github</a>"
+	      "  <h1 id=\"name\"><a id=\"header-title\" href=\"/\">Dominik Keller</a></h1>"
+
+	      "  <div id=\"search-div-wrapper\">"
+	      "    <div id=\"search-div\">"
+	      "      <input id=\"search\" type=\"text\" placeholder=\"search...\"/>"
+	      "      <div id=\"list\"> </div>"
 	      "    </div>"
+	      "  </div>"
+	      
+	      "  <div id=\"header-selector\">"
+	      "    <a class=\"main-selector\" href=\"/posts/overview.html\">Overview</a>"
+	      "    <a class=\"main-selector\" href=\"/about.html\">About</a>"
+	      "    <a class=\"main-selector\" href=\"https://www.github.com/domse007/\">Github</a>"
+	      "  </div>"
 	      "</div>"))
 
 
@@ -80,9 +106,32 @@
 (org-publish-remove-all-timestamps)
 (org-publish-all t)
 
-
 (let* ((src (expand-file-name "css/style.css" default-directory))
        (dest (expand-file-name "style/style.css" site-export-directory)))
   (message "Copying from %s to %s" src dest)
   (make-directory (expand-file-name "style/" site-export-directory))
   (copy-file src dest))
+
+(let* ((src (expand-file-name "js/main.js" default-directory))
+       (dest (expand-file-name "js/main.js" site-export-directory)))
+  (message "Copying from %s to %s" src dest)
+  (make-directory (expand-file-name "js/" site-export-directory))
+  (copy-file src dest))
+
+(defconst website-version "0.1")
+(defconst website-hash
+  (string-trim (shell-command-to-string "git rev-parse --short HEAD")))
+
+(defun website-gen-posts-list ()
+  (let ((posts (mapcar (lambda (s) (format "\"%s\": \"%s\"" (car s) (cdr s)))
+		       website-posts)))
+    (format "{ %s }" (string-join posts ", "))))
+
+(defun website-build-constants (file)
+  (with-temp-file file
+    (insert (format "export const VERSION = %s;\n" website-version)
+	      (format "export const COMMIT = \"%s\";\n" website-hash)
+	      (format "export const POSTS = %s;\n" (website-gen-posts-list)))))
+
+(website-build-constants (expand-file-name "js/gen.js"
+					   site-export-directory))

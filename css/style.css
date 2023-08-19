@@ -79,3 +79,46 @@ p > a {
 a {
     color: #73a48f;
 }
+
+/* -----------------------------------------------------------------------------
+   The search field.
+*/
+
+#search-div-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 30px;
+    z-index: 9999;
+}
+
+#search-div {
+    display: block;
+    flex-flow: row wrap;
+    width: 350px;
+}
+
+#search {
+    display: flex;
+    justify-content: center;
+    text-align: left;
+    border: 3px solid #1a241f;
+    background-color: #73a48f;
+    color: black;
+    font-family: 'Source Code Pro';
+    width: 350px;
+}
+
+#list {
+    width: 350px;
+    position: relative;
+}
+
+.result-item {
+    background-color: #73a48f;
+    overflow: visible;
+    border-bottom: 1px solid black;
+    padding: 2px;
+}
+
+/* ---------------------------------------------------------------------------*/

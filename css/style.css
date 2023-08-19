@@ -110,7 +110,7 @@ a {
 }
 
 #list {
-    width: 350px;
+    width: 360px;
     position: relative;
 }
 
@@ -119,6 +119,11 @@ a {
     overflow: visible;
     border-bottom: 1px solid black;
     padding: 2px;
+}
+
+.result-item > a {
+    color: black;
+    text-decoration: none;
 }
 
 /* ---------------------------------------------------------------------------*/

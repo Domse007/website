@@ -106,11 +106,13 @@ a {
     background-color: #73a48f;
     color: black;
     font-family: 'Source Code Pro';
-    width: 350px;
+    width: 35vw;
+    margin: 0 auto;
 }
 
 #list {
-    width: 360px;
+    width: calc(35vw + 10px);
+    margin: 0 auto;
     position: relative;
 }
 

@@ -49,4 +49,3 @@ similar to the =defclass= implementation:
 : John Smith is 32 years old.
 
 * Conclusions
-

@@ -53,6 +53,20 @@
 		(push (cons title export-filename) website-posts))
 	      (apply orig-fun args)))
 
+(advice-add #'org-html-publish-to-html
+	    :around
+	    (lambda (orig-fun &rest args)
+	      (let* ((plist (nth 0 args))
+		     (filename (nth 1 args))
+		     (title (org-publish-find-title filename plist))
+		     (export-filename
+		      (concat (file-name-sans-extension
+			       (file-name-nondirectory filename))
+			      ".html")))
+		(message "Adding %s from %s to posts." title filename)
+		(push (cons title export-filename) website-posts))
+	      (apply orig-fun args)))
+
 (defun build-entry (a b c)
   "Defines format of sitemap entries."
   (let ((time (format-time-string "%d.%m.%Y" (org-publish-find-date a c)))
@@ -70,7 +84,7 @@
 		  :with-section-numbers nil
 		  :time-stamp-file nil
 		  :section-numbers nil
-		  :auto-sitemap nil
+		  :auto-sitemap t
 		  :sitemap-format-entry #'build-entry
 		  :publishing-directory site-export-directory
 		  :publishing-function #'org-html-publish-to-html)))
@@ -94,12 +108,11 @@
 	      "    </div>"
 	      "  </div>"
 	      "  <div id=\"header-selector\">"
-	      "    <a class=\"main-selector\" href=\"/posts/overview.html\">Overview</a>"
+	      "    <a class=\"main-selector\" href=\"/sitemap.html\">Sitemap</a>"
 	      "    <a class=\"main-selector\" href=\"/about.html\">About</a>"
 	      "    <a class=\"main-selector\" href=\"https://www.github.com/domse007/\">Github</a>"
 	      "  </div>"
 	      "</div>"))
-
 
 (delete-directory site-export-directory t)
 

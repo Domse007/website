@@ -1,3 +1,6 @@
 tmp
 public
 _site
+source/sitemap.org
+publish.el
+/publish.prod

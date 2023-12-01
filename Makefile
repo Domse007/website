@@ -6,10 +6,16 @@ BA := "http://localhost"
 DN := ":5"
 
 all:
+	@echo "[ Step 1 ]"
+	emacs   --batch \
+		--eval "(require 'org)" \
+		--eval "(org-babel-tangle-file \"./source/publish.org\")"
+	@echo "[ Step 2 ]"
 	emacs -Q --script publish.el
+	@echo "[ DONE! ]"
 
 clean:
-	rm -rf tmp public
+	rm -rf tmp public publish.el
 
 pretty:
 	broadwayd ":5" &

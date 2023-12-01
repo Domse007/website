@@ -14,3 +14,12 @@ lot of amusing things:
 - [[file:elisp-classes.org][Emacs lisp is OOP]]
 - [[file:lspce.org][A guide to install lspce]]
 - [[file:elisp.org][My grieveances with elisp]]
+
+* Website
+The build script is also just another article that is tangled into
+the script:
+- [[file:publish.org][The build script]]
+
+In the future, the =JS= and =CSS= files will also be converted into
+articles, that will be compiled into the =html= and the effective "code"
+files.

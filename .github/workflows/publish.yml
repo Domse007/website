@@ -30,7 +30,7 @@ jobs:
       - name: Install Emacs
         run: sudo apt install emacs-nox --yes
       - name: Build the site
-        run: emacs -q --script publish.el
+        run: make all
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:

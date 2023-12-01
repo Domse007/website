@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - ci
 
 permissions:
   contents: read
@@ -28,7 +29,7 @@ jobs:
         id: pages
         uses: actions/configure-pages@v3
       - name: Install Emacs
-        run: sudo apt install emacs-nox --yes
+        run: sudo apt install emacs-nox make --yes
       - name: Build the site
         run: make all
       - name: Upload artifact

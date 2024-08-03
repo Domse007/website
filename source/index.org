@@ -15,6 +15,9 @@ lot of amusing things:
 - [[file:lspce.org][A guide to install lspce]]
 - [[file:elisp.org][My grieveances with elisp]]
 
+* Scripting
+- [[file:fzf.org][Optimizing interactive fzf usage]]
+
 * Website
 The build script is also just another article that is tangled into
 the script:

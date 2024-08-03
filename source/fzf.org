@@ -1,0 +1,75 @@
+#+title: Optimizing interactive fzf usage
+#+author: Dominik Keller
+
+* Initial situation
+My =fzf= installation was broken for months. I installed it via my
+package manager and because i use an =zorin= the package was out of date
+and the =--bash= wasn't even an option. After installing via [[https://github.com/junegunn/fzf?tab=readme-ov-file#using-git][git]] I was
+able to get the ==**TAB== functionality.
+
+* Configuring
+When using the function hooks from =--bash= =fzf= gets invoked by bash
+itself and customization is only possible through the
+=FZF_DEFAULT_OPTS= environment variable.
+
+Because =fzf= can query for files, directories and history a bit of
+scripting is required to select the correct program to display a
+preview.
+
+The complete code currently looks like this:
+
+#+begin_src bash
+function __fzf_preview_cmd {
+    /usr/bin/echo " [[ -d {} ]] && exa -la --color=always {} " \
+		  " || [[ -f {} ]] && bat --color=always {} " \
+		  " || __FZF_MAN_WORD=\\\"\$(echo {} | head -n1 | awk '{ print \$2; }')\\\" " \
+		  "    && man \$__FZF_MAN_WORD > /dev/null 2>&1 && man \$__FZF_MAN_WORD " \
+		  " || echo {} "
+}
+
+FZF_DEFAULT_OPTS="--preview=\"$(__fzf_preview_cmd)\""
+#+end_src
+
+Everything is wrapped in a function, because the string is very long
+and it's the sanest way to generate the string.
+
+#+begin_src bash
+[[ -d {} ]] && exa -la --color=always {}
+#+end_src
+
+The first case handled is the directory case. In that case =exa= is
+called and displays the directory content.
+
+#+begin_src bash
+|| [[ -f {} ]] && bat --color=always {}
+#+end_src
+
+In case it's a file bat is used to generate a preview with colors.
+
+#+begin_src bash
+|| __FZF_MAN_WORD="$(echo {} | head -n1 | awk '{ print \$2; }')" \
+		 && man \$__FZF_MAN_WORD > /dev/null 2>&1 && man \$__FZF_MAN_WORD
+#+end_src
+
+When =fzf= is initialized it also hooks into the history search. In that
+case the man page for the currently selected command from the history
+is displayed (if available).
+
+#+begin_src bash
+|| echo {}
+#+end_src
+
+In case the selection is not handled by the preview code it's simply
+printed into the preview buffer.
+
+For some reason the =FZF_DEFAULT_OPTS= variable is not used when calling
+=fzf= directly. If the same code should be used in that case, an alias
+does the job:
+
+#+begin_src bash
+alias fzf="fzf --preview=\"$FZF_PREVIEW_CMD\""
+#+end_src
+
+* Conclusion
+Bash scripting is a pain, but in the end it's worth it. The previewing
+makes it so much easier selecting the right thing.

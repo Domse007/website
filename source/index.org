@@ -1,6 +1,18 @@
 #+title: Welcome!
 #+author: Dominik Keller
 
+#+html_head: <script type="module" src="js/cli.js"></script>
+#+html: <div style="padding: 10px; border-left: 5px solid #29785c;
+#+html:  min-height: 100px; max-height: 100px; overflow: scroll;"
+#+html:  id="stdout">
+#+html:   <div class="cmd-input" style="display: flex; color: #29785c;
+#+html:    font-family: 'Source Code Pro';">
+#+html:     <input style="width: 100%; background-color: inherit;
+#+html:      border: none; color: inherit;font-size: 12pt;"
+#+html:      id="cmd-input-field">
+#+html:   </div>
+#+html: </div>
+
 This site contains thoughts and notes mostly about Emacs, Rust and GNU/Linux.
 
 * Emacs
